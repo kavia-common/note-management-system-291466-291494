@@ -1,0 +1,16 @@
+{
+  "name": "tizen",
+  "version": "0.0.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "tizen",
+      "version": "0.0.0",
+      "devDependencies": {
+        "vite": "5.4.11",
+        "@vitejs/plugin-react": "4.3.4"
+      }
+    }
+  }
+}

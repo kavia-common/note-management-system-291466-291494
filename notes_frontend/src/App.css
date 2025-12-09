@@ -1,45 +1,294 @@
-.tv-app {
+:root {
+  --color-primary: #2563EB;
+  --color-secondary: #F59E0B;
+  --color-error: #EF4444;
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+}
+
+.notes-app {
   width: 1920px;
   height: 1080px;
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  grid-template-rows: 1fr;
+  background: linear-gradient(120deg, rgba(59,130,246,0.08), rgba(249,250,251,1));
+  color: var(--text);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+@media (max-width: 1400px) {
+  .notes-app {
+    grid-template-columns: 420px 1fr;
+  }
+}
+
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  transition: width 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  transform: translateX(-10px);
+}
+
+.sidebar-header {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  background: #000;
-  color: #fff;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-h1 {
-  font-size: 72px;
-  margin-bottom: 60px;
+.app-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0;
 }
 
-.content {
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.input {
+  flex: 1;
+  background: #f3f4f6;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.notes-list {
+  list-style: none;
+  overflow-y: auto;
+  padding: 6px;
+  margin: 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(255,255,255,0.6));
+}
+
+.notes-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+  background-color: rgba(17,24,39,0.15);
+  border-radius: 10px;
+}
+
+.note-item {
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 14px;
+  margin: 8px 0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.note-item:hover,
+.note-item:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.15);
+  transform: translateY(-2px);
+}
+
+.note-item.active {
+  background: linear-gradient(120deg, rgba(37,99,235,0.08), rgba(255,255,255,1));
+  border-color: var(--color-primary);
+}
+
+.note-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.note-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.note-time {
+  color: var(--muted);
+}
+
+.note-excerpt {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-state {
+  padding: 12px;
+  color: var(--muted);
   text-align: center;
 }
 
-button {
-  font-size: 32px;
-  padding: 20px 60px;
-  border-radius: 10px;
-  border: 3px solid #666;
-  background: #222;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s;
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 12px;
 }
 
-button:hover,
-button:focus {
-  border-color: #00aaff;
-  background: #00aaff;
-  color: #000;
-  transform: scale(1.1);
+.editor-toolbar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+}
+
+.title-input {
+  flex: 1;
+  font-size: 28px;
+  font-weight: 800;
+  border: none;
   outline: none;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
 }
 
-p {
-  margin-top: 30px;
-  font-size: 24px;
-  color: #888;
+.title-input::placeholder {
+  color: #9ca3af;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.save-indicator {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.save-indicator.saving {
+  color: var(--color-secondary);
+}
+
+.content-input {
+  flex: 1;
+  height: calc(100% - 120px);
+  min-height: 720px;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  outline: none;
+  background: var(--surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.10);
+}
+
+.no-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--muted);
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+  font-weight: 600;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+.btn.primary {
+  background: var(--color-primary);
+  color: white;
+  border-color: transparent;
+}
+
+.btn.primary:hover {
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+.btn.danger {
+  background: var(--color-error);
+  color: white;
+  border-color: transparent;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+/* Responsive sidebar collapse for smaller viewports (if used outside fixed 1080p) */
+@media (max-width: 1100px) {
+  .notes-app {
+    grid-template-columns: 100%;
+  }
+  .sidebar {
+    position: absolute;
+    z-index: 10;
+    width: 80%;
+    max-width: 420px;
+    height: 100%;
+  }
+  .editor-pane {
+    grid-column: 1;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
