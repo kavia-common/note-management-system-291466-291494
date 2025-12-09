@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": ">=18 <20"
+    "node": ">=18 <20",
+    "npm": ">=10"
   },
   "browserslist": [
     "defaults",
@@ -13,17 +14,21 @@
   ],
   "packageManager": "npm@10.8.2",
   "scripts": {
-    "preinstall": "node -e \"const v=process.versions.node.split('.').map(Number); if(!(v[0]===18)){console.error('This project expects Node 18.x for build. Detected '+process.versions.node); process.exit(0)}\"",
-    "dev": "node ./node_modules/vite/bin/vite.js",
-    "build": "node ./node_modules/vite/bin/vite.js build",
+    "preinstall": "node -e \"const v=process.versions.node.split('.').map(Number); if(v[0]!==18){console.error('This project expects Node 18.x for build. Detected '+process.versions.node); process.exit(1)}\"",
+    "postinstall": "node -e \"try{const inst=require('vite/package.json').version; if(!/^5\\./.test(inst)){console.error('Installed vite '+inst+' is incompatible. Expected 5.x.'); process.exit(1);} }catch(e){console.error('Vite not installed or unreadable', e); process.exit(1);} \"",
+    "dev": "node ./node_modules/vite/bin/vite.js --host 0.0.0.0 --port 3000",
+    "build": "node -e \"const v=require('vite/package.json').version; if(!/^5\\./.test(v)){console.error('Build requires vite 5.x, found '+v); process.exit(1)}\" && node ./node_modules/vite/bin/vite.js build",
+    "build:auto": "node -e \"let v='';try{v=require('vite/package.json').version}catch{}; if(!/^5\\./.test(v||'')){process.exit(1)}\" || npm run fix:deps:vite5 && node ./node_modules/vite/bin/vite.js build",
+    "fix:deps:vite5": "npm i -D vite@5.4.11 @vitejs/plugin-react@4.3.4 react-refresh@0.14.0 --no-fund --no-audit --loglevel=warn",
     "lint": "eslint .",
-    "preview": "node ./node_modules/vite/bin/vite.js preview",
+    "prepare": "node -e \"let v='';try{v=require('vite/package.json').version}catch{}; if(!/^5\\./.test(v||'')){console.warn('Fixing vite version to 5.4.11 (was '+(v||'none')+')'); process.exitCode=0; }\" || npm i -D vite@5.4.11 @vitejs/plugin-react@4.3.4 --no-fund --no-audit --loglevel=warn",
+    "preview": "node ./node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 3000",
     "build:tizen": "node ./node_modules/vite/bin/vite.js build",
     "package:tizen": "cd dist && zip -r ../app.wgt * ../config.xml"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -38,10 +43,12 @@
   },
   "overrides": {
     "vite": "5.4.11",
-    "@vitejs/plugin-react": "4.3.4"
+    "@vitejs/plugin-react": "4.3.4",
+    "react-refresh": "0.14.0"
   },
   "resolutions": {
     "vite": "5.4.11",
-    "@vitejs/plugin-react": "4.3.4"
+    "@vitejs/plugin-react": "4.3.4",
+    "react-refresh": "0.14.0"
   }
 }
